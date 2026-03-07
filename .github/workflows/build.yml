@@ -1,0 +1,42 @@
+name: Build iOS App
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: macos-latest
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode.app
+
+      - name: Build
+        run: |
+          xcodebuild \
+          -project PlanningApp.xcodeproj \
+          -scheme PlanningApp \
+          -sdk iphoneos \
+          -configuration Release \
+          archive \
+          -archivePath $PWD/build/PlanningApp.xcarchive
+
+      - name: Export IPA
+        run: |
+          xcodebuild \
+          -exportArchive \
+          -archivePath build/PlanningApp.xcarchive \
+          -exportOptionsPlist ExportOptions.plist \
+          -exportPath build
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ipa
+          path: build/*.ipa
