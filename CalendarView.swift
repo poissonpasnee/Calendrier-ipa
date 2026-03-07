@@ -10,36 +10,28 @@ struct CalendarView: View {
 
         VStack {
 
-            HStack {
-                Button("<") { vm.previousMonth() }
-                Spacer()
-                Text(vm.monthTitle)
-                    .font(.headline)
-                Spacer()
-                Button(">") { vm.nextMonth() }
-            }
-            .padding()
+            MonthHeaderView(vm: vm)
 
-            LazyVGrid(columns: columns) {
+            LazyVGrid(columns: columns, spacing: 10) {
 
                 ForEach(vm.days) { day in
 
                     NavigationLink(destination: DayDetailView(day: day)) {
 
-                        Text("\(day.number)")
-                            .frame(height: 40)
+                        Text(vm.dayNumber(day))
+                            .frame(height: 42)
                             .frame(maxWidth: .infinity)
                             .background(vm.color(for: day.type))
-                            .cornerRadius(10)
+                            .cornerRadius(12)
                     }
-
                 }
             }
 
             Spacer()
-
         }
         .padding()
-
+        .task {
+            await vm.load()
+        }
     }
 }
