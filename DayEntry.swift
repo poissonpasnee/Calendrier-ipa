@@ -1,6 +1,6 @@
 import Foundation
 
-enum DayType: String {
+enum DayType: String, Codable {
     case jour
     case nuit
     case repos
@@ -8,8 +8,10 @@ enum DayType: String {
     case autre
 }
 
-struct DayEntry: Identifiable {
-    let id = UUID()
-    let number: Int
+struct DayEntry: Codable, Identifiable {
+
+    var id: UUID?
+    var date: Date
     var type: DayType
+    var note: String?
 }
